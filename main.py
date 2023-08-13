@@ -4,8 +4,6 @@ from saving import save_in_file
 
 def main():
     users_url = "https://databank.worldbank.org/data/download/WDI_CSV.zip"
-    #query_parameters = {"downloadformat": "csv"}
-    
     print('Downloading file ...')
     response =  get_response(url=users_url)
     if check_response(response):
@@ -22,5 +20,6 @@ def check_response(response):
     else:
         print(f'Failed to download the file. Status code: {response.status_code}')
     
-main()
+if __name__ == '__main__':
+    main()
 
