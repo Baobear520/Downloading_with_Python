@@ -32,7 +32,7 @@ def download_file(url):
         filename = content_disposition.split("filename=")[1]
     else:
         filename = url.split("/")[-1]
-    total_length = int(response.headers.get('content-length', 0))
+    total_length = int(response.headers.get('content-length'),0)
 
     try:
         with open(filename, mode="wb") as file,tqdm(
