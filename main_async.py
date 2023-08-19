@@ -1,7 +1,12 @@
-import asyncio
+import os
+import asyncio, logging
 import aiohttp
 from tqdm import tqdm
 
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 template_url = (
     "https://api.worldbank.org/v2/en/indicator/"
@@ -22,7 +27,7 @@ urls = [
 async def main():
     tasks = [download_file(url) for url in urls]
     await asyncio.gather(*tasks)
-    
+    logging.info('All files have been downloaded successfully!')
 
 
 async def download_file(url):
@@ -33,17 +38,16 @@ async def download_file(url):
                 filename = header.split("filename=")[1]
             else:
                 filename = url.split("/")[-1]
-            
+            cwd = os.getcwd()
             total_size = int(response.headers.get('content-length'),0)
             with tqdm(total=total_size, unit='B', unit_scale=True, desc=filename,) as pbar:
-                with open(filename, mode="wb") as file:
+                with open(file=cwd +(f'/downloads/{filename}'), mode="wb") as file:
                     while True:
                         chunk = await response.content.read()
                         if not chunk:
                             break
                         file.write(chunk)
                         pbar.update(len(chunk))
-            
-    
+
 if __name__ == "__main__":
     asyncio.run(main())
